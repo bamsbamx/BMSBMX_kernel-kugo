@@ -14,6 +14,8 @@ echo "Extracting ramdisk from image file..."
 
 echo "Decompressing ramdisk..."
 
+mkdir -p $ramdiskoutput
+
 gunzip -c ramdisk.cpio.gz | ./bootimg unpackinitfs -d $ramdiskoutput
 
 rm -f ramdisk.cpio.gz
