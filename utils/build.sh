@@ -54,12 +54,6 @@ if [ ! -f $outputdir/arch/arm64/boot/Image.gz-dtb ]; then
 fi
 
 
-if [ ! -e ${workdir}/ramdisk.cpio.gz ]; then
-    colorPrint "ERROR: ramdisk image file not found. Compression failed" $RED
-    exit 1
-fi
-
-
 colorPrint "Packaging boot image file" $BLUE
 
 cd ${workdir}/utils

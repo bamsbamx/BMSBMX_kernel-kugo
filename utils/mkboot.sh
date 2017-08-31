@@ -33,7 +33,22 @@ if [ -e $outputdir/boot.img ]; then
 fi
 
 
-${workdir}/utils/mkbootimg --kernel $outputdir/arch/arm64/boot/Image.gz-dtb --ramdisk ${workdir}/ramdisk.cpio.gz --cmdline "androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 zram.backend=z3fold earlyprintk buildvariant=user" --base 0x20000000 --pagesize 2048 --ramdisk_offset 0x02000000 --tags_offset 0x01E00000 -o ${outputdir}/boot.img
+colorPrint "Compressing ramdisk..." $BLUE
+
+if [ ! -e $ramdisk ]; then
+    colorPrint "ERROR: ramdisk folder not found. Expected directory at: $ramdisk" $RED
+    exit 1
+fi
+
+${workdir}/utils/bootimg mkinitfs $ramdisk | gzip -c > $outputdir/ramdisk.cpio.gz
+
+if [ ! -e $outputdir/ramdisk.cpio.gz ]; then
+    colorPrint "ERROR: ramdisk image file not found. Compression failed" $RED
+    exit 1
+fi
+
+
+${workdir}/utils/mkbootimg --kernel $outputdir/arch/arm64/boot/Image.gz-dtb --ramdisk $outputdir/ramdisk.cpio.gz --cmdline "androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 zram.backend=z3fold earlyprintk buildvariant=user" --base 0x20000000 --pagesize 2048 --ramdisk_offset 0x02000000 --tags_offset 0x01E00000 -o ${outputdir}/boot.img
 
 if [ ! -f $outputdir/boot.img ]; then
     colorPrint "ERROR: boot image file not found. boot packaging failed" $RED
