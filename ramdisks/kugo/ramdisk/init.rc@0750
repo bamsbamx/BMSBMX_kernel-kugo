@@ -11,6 +11,8 @@ import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 
 on early-init
+    restorecon /vendor/lib64/libdrmfix.so
+    restorecon /vendor/lib/libdrmfix.so
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
