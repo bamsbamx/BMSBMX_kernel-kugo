@@ -182,3 +182,7 @@ CONFIG_LOCALVERSION_AUTO=n
 
 # Disable module signature requirement
 # CONFIG_MODULE_SIG_FORCE is not set
+
+# Disable DM verity
+# CONFIG_DM_VERITY is not set
+# CONFIG_PANIC_ON_DM_VERITY_ERRORS is not set
