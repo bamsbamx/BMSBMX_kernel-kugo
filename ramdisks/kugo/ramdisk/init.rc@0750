@@ -684,3 +684,10 @@ on vendor-ovl
     mount none /system/vendor/lib64 /vendor/lib64/bind_lib64 bind
     exec u:r:init:s0 -- /system/bin/sh /init.vendor_ovl.sh /vendor
     restorecon_recursive /vendor
+
+# launch SuperSU daemon
+service daemonsu /vendor/bin/daemonsu --auto-daemon
+    class late_start
+    user root
+    seclabel u:r:init:s0
+    oneshot
