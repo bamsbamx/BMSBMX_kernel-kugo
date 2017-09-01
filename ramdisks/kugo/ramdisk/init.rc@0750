@@ -271,6 +271,7 @@ on late-init
     # /system and /vendor must be mounted by the end of the fs stage,
     # while /data is optional.
     trigger fs
+    trigger vendor-ovl
     trigger post-fs
 
     # Load properties from /system/ + /factory after fs mount. Place
@@ -675,3 +676,9 @@ on property:ro.debuggable=1
 service flash_recovery /system/bin/install-recovery.sh
     class main
     oneshot
+
+on vendor-ovl
+    mount none /system/vendor/lib /vendor/lib/bind_lib bind
+    mount none /system/vendor/lib64 /vendor/lib64/bind_lib64 bind
+    exec u:r:init:s0 -- /system/bin/sh /init.vendor_ovl.sh /vendor
+    restorecon_recursive /vendor
