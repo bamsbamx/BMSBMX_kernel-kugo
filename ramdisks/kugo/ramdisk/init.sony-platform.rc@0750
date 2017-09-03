@@ -251,9 +251,9 @@ on boot
     exec u:r:usb_device_mode:s0 -- /system/bin/sh /init.usbmode.platform.sh "set_rndis_qc"
 
     # SONY: Enable Sony RIC
-    mount securityfs securityfs /sys/kernel/security nosuid nodev noexec
-    write /sys/kernel/security/sony_ric/enable 0
-    chmod 0640 /sys/kernel/security/sony_ric/enable
+    #mount securityfs securityfs /sys/kernel/security nosuid nodev noexec
+    #write /sys/kernel/security/sony_ric/enable 0
+    #chmod 0640 /sys/kernel/security/sony_ric/enable
 
     # SONY: for Bluesleep
     chown bluetooth net_bt /proc/bluetooth/sleep/lpm
