@@ -80,9 +80,9 @@ on property:sys.smartstamina.touchreport=1
    write /sys/devices/virtual/input/clearpad/stamina_mode 1
 
 # QC3.0 charging detection daemon
-on property:vold.decrypt=trigger_restart_framework
-    start hvdcp_opti
-    setprop persist.hvdcp.allow_opti 1
+#on property:vold.decrypt=trigger_restart_framework
+#    start hvdcp_opti
+#    setprop persist.hvdcp.allow_opti 1
 
 service hvdcp_opti /system/bin/hvdcp_opti
     user root
