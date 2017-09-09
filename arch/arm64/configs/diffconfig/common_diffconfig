@@ -194,3 +194,22 @@ CONFIG_LOCALVERSION_AUTO=n
 
 # Disable CPU boost for battery savings
 # CONFIG_CPU_BOOST is not set
+
+# Disable debugging
+# CONFIG_WAKEUP_IRQ_DEBUG is not set
+# CONFIG_SUBSYS_LAST_ERR_LOG is not set
+# CONFIG_FB_MSM_MDSS_XLOG_DEBUG is not set
+# CONFIG_MSM_RPM_LOG is not set
+# CONFIG_MSM_RPM_STATS_LOG is not set
+# CONFIG_MSM_SMEM_LOGGING is not set
+# CONFIG_MSM_COMMON_LOG is not set
+# CONFIG_MSM_TZ_LOG is not set
+# CONFIG_USB_GADGET_DEBUG_FILES is not set
+# CONFIG_USB_GADGET_DEBUG_FS is not set
+# CONFIG_DEBUG_INFO is not set
+# CONFIG_RMNET_DATA_DEBUG_PKT is not set
+# CONFIG_L2TP_DEBUGFS is not set
+# CONFIG_SCSI_LOGGING is not set
+# CONFIG_SECURITY_SELINUX_AVC_STATS is not set
+# CONFIG_SECURITY_SELINUX_AVC_EXTRA_INFO is not set
+# CONFIG_PRINTK_TIME is not set
