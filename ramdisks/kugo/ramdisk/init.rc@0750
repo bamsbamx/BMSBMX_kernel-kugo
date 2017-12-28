@@ -11,8 +11,6 @@ import /init.usb.configfs.rc
 import /init.${ro.zygote}.rc
 
 on early-init
-    restorecon /vendor/lib64/libdrmfix.so
-    restorecon /vendor/lib/libdrmfix.so
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
 
@@ -273,7 +271,6 @@ on late-init
     # /system and /vendor must be mounted by the end of the fs stage,
     # while /data is optional.
     trigger fs
-    trigger vendor-ovl
     trigger post-fs
 
     # Load properties from /system/ + /factory after fs mount. Place
@@ -677,17 +674,4 @@ on property:ro.debuggable=1
 
 service flash_recovery /system/bin/install-recovery.sh
     class main
-    oneshot
-
-on vendor-ovl
-    mount none /system/vendor/lib /vendor/lib/bind_lib bind
-    mount none /system/vendor/lib64 /vendor/lib64/bind_lib64 bind
-    exec u:r:init:s0 -- /system/bin/sh /init.vendor_ovl.sh /vendor
-    restorecon_recursive /vendor
-
-# launch SuperSU daemon
-service daemonsu /vendor/bin/daemonsu --auto-daemon
-    class late_start
-    user root
-    seclabel u:r:init:s0
     oneshot

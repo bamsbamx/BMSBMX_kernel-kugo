@@ -19,6 +19,23 @@
 static struct miscdevice audio_alac_misc;
 static struct ws_mgr audio_alac_ws_mgr;
 
+#ifdef CONFIG_DEBUG_FS
+static const struct file_operations audio_alac_debug_fops = {
+	.read = audio_aio_debug_read,
+	.open = audio_aio_debug_open,
+};
+static struct dentry *config_debugfs_create_file(const char *name, void *data)
+{
+	return debugfs_create_file(name, S_IFREG | S_IRUGO,
+				NULL, (void *)data, &audio_alac_debug_fops);
+}
+#else
+static struct dentry *config_debugfs_create_file(const char *name, void *data)
+{
+	return NULL;
+}
+#endif
+
 static int alac_channel_map(u8 *channel_mapping, uint32_t channels);
 
 static long audio_ioctl_shared(struct file *file, unsigned int cmd,
@@ -324,6 +341,13 @@ static int audio_open(struct inode *inode, struct file *file)
 	}
 
 	snprintf(name, sizeof(name), "msm_alac_%04x", audio->ac->session);
+	audio->dentry = config_debugfs_create_file(name, (void *)audio);
+
+	if (IS_ERR_OR_NULL(audio->dentry))
+		pr_debug("debugfs_create_file failed\n");
+	pr_debug("%s:alacdec success mode[%d]session[%d]\n", __func__,
+						audio->feedback,
+						audio->ac->session);
 	return rc;
 fail:
 	q6asm_audio_client_free(audio->ac);

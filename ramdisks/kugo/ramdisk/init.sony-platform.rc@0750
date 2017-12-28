@@ -251,9 +251,8 @@ on boot
     exec u:r:usb_device_mode:s0 -- /system/bin/sh /init.usbmode.platform.sh "set_rndis_qc"
 
     # SONY: Enable Sony RIC
-    #mount securityfs securityfs /sys/kernel/security nosuid nodev noexec
-    #write /sys/kernel/security/sony_ric/enable 0
-    #chmod 0640 /sys/kernel/security/sony_ric/enable
+    mount securityfs securityfs /sys/kernel/security nosuid nodev noexec
+    chmod 0640 /sys/kernel/security/sony_ric/enable
 
     # SONY: for Bluesleep
     chown bluetooth net_bt /proc/bluetooth/sleep/lpm
@@ -480,11 +479,11 @@ service ssuiccd /system/bin/ssuiccd
     socket ssuiccd stream 0666 smartcard smartcard
 
 # Start RIC
-#service ric /sbin/ric
-#    user root
-#    group root drmrpc trimarea system
-#    class main
-#    seclabel u:r:ric:s0
+service ric /sbin/ric
+    user root
+    group root drmrpc trimarea system
+    class main
+    seclabel u:r:ric:s0
 
 
 

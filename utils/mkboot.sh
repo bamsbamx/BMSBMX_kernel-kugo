@@ -48,7 +48,7 @@ if [ ! -e $outputdir/ramdisk.cpio.gz ]; then
 fi
 
 
-${workdir}/utils/mkbootimg --kernel $outputdir/arch/arm64/boot/Image.gz-dtb --ramdisk $outputdir/ramdisk.cpio.gz --cmdline "androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 zram.backend=z3fold earlyprintk buildvariant=user" --base 0x20000000 --pagesize 2048 --ramdisk_offset 0x02000000 --tags_offset 0x01E00000 -o ${outputdir}/boot.img
+${workdir}/utils/mkbootimg --kernel $outputdir/arch/arm64/boot/Image.gz-dtb --ramdisk $outputdir/ramdisk.cpio.gz --cmdline "androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 zram.backend=z3fold earlyprintk buildvariant=user" --base 0x00000000 --pagesize 4096 --ramdisk_offset 0x22000000 --tags_offset 0x01E00000 -o ${outputdir}/boot.img
 
 if [ ! -f $outputdir/boot.img ]; then
     colorPrint "ERROR: boot image file not found. boot packaging failed" $RED
