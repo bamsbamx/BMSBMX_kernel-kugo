@@ -372,11 +372,11 @@ service mlog_qmi_service /system/bin/mlog_qmi_service
     disabled
 
 # SONY: IDD daemon
-service iddd /system/bin/iddd
-    class core
-    user idd
-    group idd log inet trimarea
-    writepid /dev/cpuset/system-background/tasks
+# service iddd /system/bin/iddd
+#     class core
+#     user idd
+#     group idd log inet trimarea
+#     writepid /dev/cpuset/system-background/tasks
 
 # Config file updater
 service ota-updater /system/bin/ota-config-updater.sh

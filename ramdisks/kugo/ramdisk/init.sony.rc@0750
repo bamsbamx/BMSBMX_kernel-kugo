@@ -27,14 +27,14 @@ on post-fs-data
     # Remove lost+found in user and userdebug
     start cleanlostfound
     
-    mkdir /idd/lost+found 0770 root root
-    mkdir /idd/output 0755 idd idd
-    mkdir /idd/socket 0711 idd idd
-    mkdir /idd/startup-prober 0700 root root
+    # mkdir /idd/lost+found 0770 root root
+    # mkdir /idd/output 0755 idd idd
+    # mkdir /idd/socket 0711 idd idd
+    # mkdir /idd/startup-prober 0700 root root
     
-    exec u:r:restorecon:s0 -- /system/bin/restorecon -RF /idd
-    mkdir /rca/plugins 0750 idd idd
-    exec u:r:restorecon:s0 -- /system/bin/restorecon -RF /rca
+    # exec u:r:restorecon:s0 -- /system/bin/restorecon -RF /idd
+    # mkdir /rca/plugins 0750 idd idd
+    # exec u:r:restorecon:s0 -- /system/bin/restorecon -RF /rca
     exec u:r:fota-init:s0 -- /system/bin/sh /system/etc/post-fs-data-fota.sh
 
 on early-boot

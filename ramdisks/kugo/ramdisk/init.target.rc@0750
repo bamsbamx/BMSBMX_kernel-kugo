@@ -42,8 +42,8 @@ on fs
     start fsckwait
 
     # SONY: creat mount point for idd and rca
-    mkdir /idd 0751 idd idd
-    mkdir /rca 0750 idd idd
+    # mkdir /idd 0751 idd idd
+    # mkdir /rca 0750 idd idd
 
     # SONY: creat mount point for qns
     mkdir /qns 0750 qns qns
@@ -59,14 +59,14 @@ on fs
     exec u:r:fsckwait:s0 system -- /sbin/fsckwait e
 
     # SONY: setup idd and rca partition
-    chown idd idd /idd
-    chmod 0751 /idd
-    exec /system/bin/rm -r /idd/lost+found
-    symlink /idd /mnt/idd
-    chown idd idd /rca
-    chmod 0750 /rca
-    exec /system/bin/rm -r /rca/lost+found
-    symlink /rca /mnt/rca
+    # chown idd idd /idd
+    # chmod 0751 /idd
+    # exec /system/bin/rm -r /idd/lost+found
+    # symlink /idd /mnt/idd
+    # chown idd idd /rca
+    # chmod 0750 /rca
+    # exec /system/bin/rm -r /rca/lost+found
+    # symlink /rca /mnt/rca
 
     # SONY: setup qns partition
     chown qns qns /qns
