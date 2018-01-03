@@ -32,7 +32,7 @@ on init
     # Avoid long waits for rcu grace periods
     write /sys/kernel/rcu_expedited 1
 
-    write /proc/sys/vm/swappiness 100
+    write /proc/sys/vm/swappiness 0
 
     # Populate cpusets with correct cpus
     write /dev/cpuset/foreground/cpus 0-5
