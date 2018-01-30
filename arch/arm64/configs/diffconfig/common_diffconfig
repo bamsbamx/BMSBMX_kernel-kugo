@@ -183,9 +183,6 @@ CONFIG_LOCALVERSION_AUTO=n
 # Disable SONY RIC
 # CONFIG_SECURITY_SONY_RIC is not set
 
-# Enable Wakelock Blocker driver
-CONFIG_BOEFFLA_WL_BLOCKER=y
-
 # Disable ZRAM and memory swap
 CONFIG_SWAP=n
 CONFIG_ZRAM=n
@@ -202,4 +199,3 @@ CONFIG_ZSMALLOC=n
 # Enable power efficient workqueues
 CONFIG_WQ_POWER_EFFICIENT=y
 CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
-
