@@ -77,3 +77,17 @@ echo 40 > /sys/devices/system/cpu/cpu4/core_ctl/busy_down_thres
 echo 50 > /sys/devices/system/cpu/cpu4/core_ctl/offline_delay_ms
 echo 1 > /sys/devices/system/cpu/cpu4/core_ctl/is_big_cluster
 
+# GPU powersaving settings
+echo "powersave" > /sys/class/kgsl/kgsl-3d0/devfreq/governor
+echo 133333333 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+echo 266666667 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+echo 266666667 > /sys/class/kgsl/kgsl-3d0/max_gpuclk
+echo 5 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
+echo 5 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+echo 5 > /sys/class/kgsl/kgsl-3d0/default_pwrlevel
+
+# Misc tweaks
+echo 0 > /sys/block/mmcblk0/queue/iostats
+echo 80 > /proc/sys/vm/dirty_ratio
+echo 20 > /proc/sys/vm/dirty_background_ratio
+
