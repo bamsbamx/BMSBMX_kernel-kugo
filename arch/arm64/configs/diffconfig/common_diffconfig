@@ -198,3 +198,8 @@ CONFIG_ZSMALLOC=n
 
 # Disable CPU boost for battery savings
 # CONFIG_CPU_BOOST is not set
+
+# Enable power efficient workqueues
+CONFIG_WQ_POWER_EFFICIENT=y
+CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
+
