@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Mobile Communications Inc.
+ * Modifications are Copyright (c) 2017 Sony Mobile Communications Inc,
+ * and licensed under the license of the file.
+ */
 
 #ifndef __MSM_MPM_IRQ_H
 #define __MSM_MPM_IRQ_H
@@ -140,7 +145,7 @@ static inline bool msm_mpm_irqs_detectable(bool from_idle)
 { return false; }
 static inline bool msm_mpm_gpio_irqs_detectable(bool from_idle)
 { return false; }
-static inline void msm_mpm_enter_sleep(uint64_t sclk_count, bool from_idle,
+static inline void msm_mpm_enter_sleep(uint32_t sclk_count, bool from_idle,
 		const struct cpumask *cpumask) {}
 static inline void msm_mpm_exit_sleep(bool from_idle) {}
 static inline void __init of_mpm_init(void) {}

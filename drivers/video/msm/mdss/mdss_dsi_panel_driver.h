@@ -365,7 +365,7 @@ int mdss_dsi_request_gpios(struct mdss_dsi_ctrl_pdata *ctrl_pdata);
 int mdss_dsi_parse_dcs_cmds(struct device_node *np,
 				   struct dsi_panel_cmds *pcmds, char *cmd_key, char *link_key);
 void mdss_dsi_panel_cmds_send(struct mdss_dsi_ctrl_pdata *ctrl,
-				     struct dsi_panel_cmds *pcmds);
+				     struct dsi_panel_cmds *pcmds, u32 flags);
 int mdss_mdp_tearcheck_enable(struct mdss_mdp_ctl *ctl, bool enable);
 
 static inline struct mdss_dsi_ctrl_pdata *mdss_dsi_get_master_ctrl(

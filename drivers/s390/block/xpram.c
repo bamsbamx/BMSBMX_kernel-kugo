@@ -24,11 +24,6 @@
  * Potential future improvements:
  *   generic hard disk support to replace ad-hoc partitioning
  */
-/*
- * NOTE: This file has been modified by Sony Mobile Communications Inc.
- * Modifications are Copyright (c) 2016 Sony Mobile Communications Inc,
- * and licensed under the license of the file.
- */
 
 #define KMSG_COMPONENT "xpram"
 #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
@@ -349,6 +344,7 @@ static int __init xpram_setup_blkdev(void)
 			goto out;
 		}
 		queue_flag_set_unlocked(QUEUE_FLAG_NONROT, xpram_queues[i]);
+		queue_flag_clear_unlocked(QUEUE_FLAG_ADD_RANDOM, xpram_queues[i]);
 		blk_queue_make_request(xpram_queues[i], xpram_make_request);
 		blk_queue_logical_block_size(xpram_queues[i], 4096);
 	}

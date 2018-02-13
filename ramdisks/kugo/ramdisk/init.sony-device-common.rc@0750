@@ -84,14 +84,8 @@ on property:vold.decrypt=trigger_restart_framework
     start hvdcp_opti
     setprop persist.hvdcp.allow_opti 1
 
-service hvdcp_opti /system/bin/hvdcp_opti
+service hvdcp_opti /vendor/bin/hvdcp_opti
     user root
-    group root
+    group system wakelock
     disabled
 
-# Start Key Provision daemon
-service keyprovd /system/bin/keyprovd
-    user system
-    group system
-    oneshot
-    class late_start

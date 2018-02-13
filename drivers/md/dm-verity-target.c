@@ -13,11 +13,6 @@
  * are on the same disk on different partitions on devices with poor random
  * access behavior.
  */
-/*
- * NOTE: This file has been modified by Sony Mobile Communications Inc.
- * Modifications are Copyright (c) 2016 Sony Mobile Communications Inc,
- * and licensed under the license of the file.
- */
 
 #include "dm-verity.h"
 #include "dm-verity-fec.h"
@@ -44,11 +39,6 @@
 static unsigned dm_verity_prefetch_cluster = DM_VERITY_DEFAULT_PREFETCH_SIZE;
 
 module_param_named(prefetch_cluster, dm_verity_prefetch_cluster, uint, S_IRUGO | S_IWUSR);
-
-#ifdef CONFIG_PANIC_ON_DM_VERITY_ERRORS
-static unsigned dm_verity_panic_on_err;
-module_param_named(panic_on_err, dm_verity_panic_on_err, uint, S_IRUGO | S_IWUSR);
-#endif
 
 struct dm_verity_prefetch_work {
 	struct work_struct work;
@@ -232,11 +222,6 @@ static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
 	DMERR("%s: %s block %llu is corrupted", v->data_dev->name, type_str,
 		block);
 
-#ifdef CONFIG_PANIC_ON_DM_VERITY_ERRORS
-	if (dm_verity_panic_on_err)
-		panic("%s: %s block %llu is corrupted",
-			v->data_dev->name, type_str, block);
-#endif
 	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
 		DMERR("%s: reached maximum errors", v->data_dev->name);
 
@@ -534,6 +519,7 @@ static void verity_prefetch_io(struct work_struct *work)
 		container_of(work, struct dm_verity_prefetch_work, work);
 	struct dm_verity *v = pw->v;
 	int i;
+	sector_t prefetch_size;
 
 	for (i = v->levels - 2; i >= 0; i--) {
 		sector_t hash_block_start;
@@ -556,8 +542,14 @@ static void verity_prefetch_io(struct work_struct *work)
 				hash_block_end = v->hash_blocks - 1;
 		}
 no_prefetch_cluster:
+		// for emmc, it is more efficient to send bigger read
+		prefetch_size = max((sector_t)CONFIG_DM_VERITY_HASH_PREFETCH_MIN_SIZE,
+			hash_block_end - hash_block_start + 1);
+		if ((hash_block_start + prefetch_size) >= (v->hash_start + v->hash_blocks)) {
+			prefetch_size = hash_block_end - hash_block_start + 1;
+		}
 		dm_bufio_prefetch(v->bufio, hash_block_start,
-				  hash_block_end - hash_block_start + 1);
+				  prefetch_size);
 	}
 
 	kfree(pw);
@@ -1031,7 +1023,17 @@ int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 	argc -= 10;
 
 	/* Optional parameters */
-	if (argc) {
+	if (argc == 1) {
+		if (sscanf(argv[0], "%d%c", &num, &dummy) != 1 ||
+			num < DM_VERITY_MODE_EIO ||
+			num > DM_VERITY_MODE_RESTART) {
+			ti->error = "Invalid mode";
+			r = -EINVAL;
+			goto bad;
+		}
+		v->mode = num;
+	}
+	else if (argc) {
 		as.argc = argc;
 		as.argv = argv;
 

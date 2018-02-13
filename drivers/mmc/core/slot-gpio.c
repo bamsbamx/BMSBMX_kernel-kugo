@@ -25,14 +25,14 @@
 struct mmc_gpio {
 	int ro_gpio;
 	int cd_gpio;
-	char *ro_label;
 	bool status;
 	int uim2_gpio;
 #ifdef CONFIG_MMC_BLOCK_DEFERRED_RESUME
 	bool pending_detect;
 	bool suspended;
 #endif
-	char cd_label[0]; /* Must be last entry */
+	char *ro_label;
+	char cd_label[0];
 };
 
 int mmc_gpio_get_status(struct mmc_host *host)

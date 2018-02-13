@@ -48,6 +48,7 @@
 #define SCM_EDLOAD_MODE			0X01
 #define SCM_DLOAD_CMD			0x10
 
+#define SUPPORT_DISABLE_RAMDUMP
 
 static int restart_mode;
 void *restart_reason;
@@ -166,13 +167,53 @@ static void enable_emergency_dload_mode(void)
 }
 #endif
 
+#ifdef SUPPORT_DISABLE_RAMDUMP
+static int disable_ramdump;
+static int ramdump_disable_set(const char *val, struct kernel_param *kp);
+module_param_call(disable_ramdump, ramdump_disable_set, param_get_int,
+			&disable_ramdump, 0644);
+#endif
+
 static int in_panic;
 static int panic_prep_restart(struct notifier_block *this,
 			      unsigned long event, void *ptr)
 {
+#ifdef SUPPORT_DISABLE_RAMDUMP
+	if (!disable_ramdump)
+#endif
 	in_panic = 1;
 	return NOTIFY_DONE;
 }
+
+#ifdef SUPPORT_DISABLE_RAMDUMP
+static int ramdump_disable_set(const char *val, struct kernel_param *kp)
+{
+	int ret;
+	int old_val = disable_ramdump;
+
+	if (disable_ramdump) {
+		pr_err("do not handle this action since ramdump is disabled\n");
+		return 0;
+	}
+
+	ret = param_set_int(val, kp);
+
+	if (ret)
+		return ret;
+
+	/* If download_mode is not zero or one, ignore. */
+	if (disable_ramdump >> 1) {
+		disable_ramdump = old_val;
+		return -EINVAL;
+	}
+	if (disable_ramdump) {
+		set_dload_mode(0);
+		__raw_writel(0x776655AA, restart_reason);
+		pr_err("disable ramdump\n");
+	}
+	return 0;
+}
+#endif
 
 static struct notifier_block panic_blk = {
 	.notifier_call	= panic_prep_restart,
@@ -349,6 +390,7 @@ static void do_msm_poweroff(void)
 	set_dload_mode(0);
 #endif
 	qpnp_pon_system_pwr_off(PON_POWER_OFF_SHUTDOWN);
+	qpnp_pon_set_restart_reason(PON_RESTART_REASON_UNKNOWN);
 	/* Needed to bypass debug image on some chips */
 	if (!is_scm_armv8())
 		ret = scm_call_atomic2(SCM_SVC_BOOT,

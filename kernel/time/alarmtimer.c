@@ -439,6 +439,7 @@ static int alarmtimer_suspend(struct device *dev)
 	now = ktime_add(now, min);
 	if (poweron_alarm) {
 		uint64_t msec = 0;
+
 		msec = ktime_to_ms(min);
 		lpm_suspend_wake_time(msec);
 	} else {

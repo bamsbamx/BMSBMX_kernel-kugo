@@ -104,6 +104,7 @@ static inline int get_pageblock_migratetype(struct page *page)
 struct free_area {
 	struct list_head	free_list[MIGRATE_TYPES];
 	unsigned long		nr_free;
+	unsigned long		nr_free_cma;
 };
 
 struct pglist_data;
@@ -829,6 +830,9 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
 
 extern struct mutex zonelists_mutex;
 void build_all_zonelists(pg_data_t *pgdat, struct zone *zone);
+void wake_all_kswapd(unsigned int order, struct zonelist *zonelist,
+		      enum zone_type high_zoneidx,
+		      enum zone_type classzone_idx);
 void wakeup_kswapd(struct zone *zone, int order, enum zone_type classzone_idx);
 bool zone_watermark_ok(struct zone *z, int order, unsigned long mark,
 		int classzone_idx, int alloc_flags);

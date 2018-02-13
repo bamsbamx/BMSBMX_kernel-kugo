@@ -59,8 +59,6 @@ static struct workqueue_struct *wdog_wq;
 static struct msm_watchdog_data *wdog_data;
 
 static int cpu_idle_pc_state[NR_CPUS];
-static DEFINE_PER_CPU(struct work_struct, ipi_work);
-static struct workqueue_struct *ipi_wq;
 
 struct msm_watchdog_data {
 	unsigned int __iomem phys_base;
@@ -309,12 +307,12 @@ static void pet_watchdog(struct msm_watchdog_data *wdog_dd)
 	wdog_dd->last_pet = time_ns;
 }
 
-static void keep_alive_response(struct work_struct *work)
+static void keep_alive_response(void *info)
 {
 	int cpu = smp_processor_id();
-	cpumask_set_cpu(cpu, &wdog_data->alive_mask);
+	struct msm_watchdog_data *wdog_dd = (struct msm_watchdog_data *)info;
+	cpumask_set_cpu(cpu, &wdog_dd->alive_mask);
 	smp_mb();
-	pr_debug("watchdog_v2: %s on cpu%d\n", __func__, cpu);
 }
 
 /*
@@ -327,12 +325,9 @@ static void ping_other_cpus(struct msm_watchdog_data *wdog_dd)
 	cpumask_clear(&wdog_dd->alive_mask);
 	smp_mb();
 	for_each_cpu(cpu, cpu_online_mask) {
-		if (!cpu_idle_pc_state[cpu] && cpu != smp_processor_id())
-			queue_work_on(cpu, ipi_wq, &per_cpu(ipi_work, cpu));
-	}
-	for_each_cpu(cpu, cpu_online_mask) {
-		if (!cpu_idle_pc_state[cpu] && cpu != smp_processor_id())
-			flush_work(&per_cpu(ipi_work, cpu));
+		if (!cpu_idle_pc_state[cpu])
+			smp_call_function_single(cpu, keep_alive_response,
+						 wdog_dd, 1);
 	}
 }
 
@@ -735,17 +730,6 @@ static int msm_watchdog_probe(struct platform_device *pdev)
 	INIT_WORK(&wdog_dd->init_dogwork_struct, init_watchdog_work);
 	INIT_DELAYED_WORK(&wdog_dd->dogwork_struct, pet_watchdog_work);
 	queue_work(wdog_wq, &wdog_dd->init_dogwork_struct);
-	if (wdog_dd->do_ipi_ping) {
-		int cpu;
-		ipi_wq =  alloc_workqueue("wdog_ipi", WQ_HIGHPRI, 0);
-		if (!ipi_wq) {
-			pr_err("Failed to allocate wdog_ipi workqueue\n");
-			ret = -ENOMEM;
-			goto err;
-		}
-		for_each_possible_cpu(cpu)
-			INIT_WORK(&per_cpu(ipi_work, cpu), keep_alive_response);
-	}
 	return 0;
 err:
 	destroy_workqueue(wdog_wq);

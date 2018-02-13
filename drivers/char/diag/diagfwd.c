@@ -1,4 +1,4 @@
-/* Copyright (c) 2008-2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2008-2017, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1363,7 +1363,6 @@ start:
 			diag_send_error_rsp(buf, len);
 			goto end;
 		}
-
 		mutex_lock(&driver->hdlc_recovery_mutex);
 		if (pkt_len + header_len > partial_pkt->capacity) {
 			pr_err("diag: In %s, incoming data is too large for the request buffer %d\n",
@@ -1372,7 +1371,6 @@ start:
 			diag_hdlc_start_recovery(buf, len);
 			break;
 		}
-
 		if ((pkt_len + header_len) > (len - read_bytes)) {
 			partial_pkt->read_len = len - read_bytes;
 			partial_pkt->total_len = pkt_len + header_len;
@@ -1398,9 +1396,9 @@ start:
 			mutex_unlock(&driver->hdlc_recovery_mutex);
 			break;
 		}
-		mutex_unlock(&driver->hdlc_recovery_mutex);
 		read_bytes += header_len + pkt_len + 1;
 		buf += header_len + pkt_len + 1; /* advance to next pkt */
+		mutex_unlock(&driver->hdlc_recovery_mutex);
 	}
 end:
 	return;

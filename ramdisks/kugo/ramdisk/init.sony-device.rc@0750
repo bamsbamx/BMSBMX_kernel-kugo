@@ -4,6 +4,10 @@
 #
 import init.sony-device-common.rc
 
+on post-fs-data
+    # Fingerprint data folder
+    mkdir /data/fpc 0770 system system
+
 # charger
 on property:persist.service.battery.charge=0
     write /sys/class/power_supply/battery/lrc_enable 0
@@ -14,12 +18,3 @@ on property:persist.service.battery.charge=1
     write /sys/class/power_supply/battery/lrc_socmax 60
     write /sys/class/power_supply/battery/lrc_socmin 40
     write /sys/class/power_supply/battery/lrc_enable 1
-
-on post-fs-data
-    # Fingerprint data folder
-    mkdir /data/fpc 0770 system system
-
-service fingerprintd /system/bin/fingerprintd
-    class late_start
-    user system
-    group drmrpc input system

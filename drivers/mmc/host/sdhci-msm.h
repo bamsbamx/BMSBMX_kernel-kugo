@@ -102,6 +102,7 @@ struct sdhci_msm_pltfm_data {
 	bool nonhotplug;
 	bool broken_pwr_cycle_host;
 	bool no_1p8v;
+	bool largeaddressbus;
 	bool pin_cfg_sts;
 	struct sdhci_msm_pin_data *pin_data;
 	struct sdhci_pinctrl_data *pctrl_data;
@@ -124,6 +125,7 @@ struct sdhci_msm_pltfm_data {
 #ifdef CONFIG_SOMC_WIFI_CONTROL
 	bool use_for_wifi;
 #endif
+	bool sdr104_wa;
 };
 
 struct sdhci_msm_bus_vote {

@@ -1583,7 +1583,7 @@ int mdss_dsi_panel_pcc_setup(struct mdss_panel_data *pdata)
 	mdss_dsi_op_mode_config(DSI_CMD_MODE, pdata);
 	if (spec_pdata->pre_uv_read_cmds.cmds)
 		mdss_dsi_panel_cmds_send(
-				ctrl_pdata, &spec_pdata->pre_uv_read_cmds);
+				ctrl_pdata, &spec_pdata->pre_uv_read_cmds, 0);
 	if (spec_pdata->uv_read_cmds.cmds) {
 		get_uv_data(ctrl_pdata, &pcc_data->u_data, &pcc_data->v_data);
 		raw_u_data = pcc_data->u_data;
@@ -1962,7 +1962,7 @@ static void mdss_dsi_panel_driver_fps_cmd_send(
 	if (!spec_pdata->chg_fps.susres_mode) {
 		pr_debug("%s: fps change sequence\n", __func__);
 		mdss_dsi_panel_cmds_send(ctrl_pdata,
-				&ctrl_pdata->spec_pdata->fps_cmds);
+				&ctrl_pdata->spec_pdata->fps_cmds, 0);
 	}
 	pr_notice("%s: change fpks=%d\n", __func__, dfpks);
 
@@ -2300,7 +2300,7 @@ static void mdss_dsi_panel_driver_chg_fps_cmds_send
 			pr_debug("%s: change fps sequence --- rtn = 0x%x\n",
 				__func__, rtn);
 			mdss_dsi_panel_cmds_send(ctrl_pdata,
-						&ctrl_pdata->spec_pdata->fps_cmds);
+						&ctrl_pdata->spec_pdata->fps_cmds, 0);
 		}
 	}
 }

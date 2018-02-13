@@ -34,70 +34,64 @@ on boot
     
 
 on property:sys.usb.config=mass_storage
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    start adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    start adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,cdrom
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    write /sys/class/android_usb/android0/f_cdrom/lun/file /system/etc/dop.iso
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,cdrom,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    write /sys/class/android_usb/android0/f_cdrom/lun/file /system/etc/dop.iso
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    start adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=ncm
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=ncm,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    start adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=midi
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    stop adbd
    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=midi,adb
-   exec u:r:usb_device_mode:s0 -- /init.usbmode.sh
+   exec u:r:usb_device_mode:s0 -- /vendor/bin/init.usbmode.sh
    start adbd
    setprop sys.usb.state ${sys.usb.config}
 
-# Start usbeng
-service usbeng /system/bin/usbeng
-    user system
-    group system
-    class late_start
-    oneshot

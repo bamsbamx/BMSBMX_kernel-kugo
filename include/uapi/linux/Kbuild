@@ -490,4 +490,5 @@ header-y += android_pmem.h
 header-y += tsc.h
 header-y += danipc_ioctl.h
 header-y += tof_sensor.h
+header-y += nfc/
 

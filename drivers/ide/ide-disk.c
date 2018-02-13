@@ -5,11 +5,6 @@
  *  Copyright (C) 2003		   Red Hat
  *  Copyright (C) 2003-2005, 2007  Bartlomiej Zolnierkiewicz
  */
-/*
- * NOTE: This file has been modified by Sony Mobile Communications Inc.
- * Modifications are Copyright (c) 2016 Sony Mobile Communications Inc,
- * and licensed under the license of the file.
- */
 
 /*
  *  Mostly written by Mark Lord <mlord@pobox.com>
@@ -691,8 +686,10 @@ static void ide_disk_setup(ide_drive_t *drive)
 	printk(KERN_INFO "%s: max request size: %dKiB\n", drive->name,
 	       queue_max_sectors(q) / 2);
 
-	if (ata_id_is_ssd(id))
+	if (ata_id_is_ssd(id)) {
 		queue_flag_set_unlocked(QUEUE_FLAG_NONROT, q);
+		queue_flag_clear_unlocked(QUEUE_FLAG_ADD_RANDOM, q);
+	}
 
 	/* calculate drive capacity, and select LBA if possible */
 	ide_disk_get_capacity(drive);

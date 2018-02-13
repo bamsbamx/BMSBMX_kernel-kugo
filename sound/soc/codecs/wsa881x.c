@@ -86,6 +86,7 @@ struct swr_port {
 };
 
 enum {
+	WSA881X_DEV_RESET,
 	WSA881X_DEV_DOWN,
 	WSA881X_DEV_UP,
 };
@@ -1366,6 +1367,10 @@ static int wsa881x_swr_reset(struct swr_device *pdev)
 		dev_err(&pdev->dev, "%s: wsa881x is NULL\n", __func__);
 		return -EINVAL;
 	}
+	if (wsa881x->state == WSA881X_DEV_RESET) {
+		dev_err(&pdev->dev, "Device is already reset");
+		return 0;
+	}
 	wsa881x->bg_cnt = 0;
 	wsa881x->clk_cnt = 0;
 	while (swr_get_logical_dev_num(pdev, pdev->addr, &devnum) && retry--) {
@@ -1374,6 +1379,7 @@ static int wsa881x_swr_reset(struct swr_device *pdev)
 	}
 	regcache_mark_dirty(wsa881x->regmap);
 	regcache_sync(wsa881x->regmap);
+	wsa881x->state = WSA881X_DEV_RESET;
 	return 0;
 }
 

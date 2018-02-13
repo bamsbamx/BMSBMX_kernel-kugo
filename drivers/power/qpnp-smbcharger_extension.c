@@ -1325,7 +1325,8 @@ static void somc_chg_charge_error_event(struct smbchg_chip *chip,
 		charge_error->status |= chgerr_evt;
 		pr_smb(PR_SOMC, "send charge error status (%08x)\n",
 							charge_error->status);
-		power_supply_changed(&chip->batt_psy);
+		if (chip->psy_registered)
+			power_supply_changed(&chip->batt_psy);
 	}
 }
 

@@ -147,7 +147,7 @@ static void zpool_put_driver(struct zpool_driver *driver)
  * Returns: New zpool on success, NULL on failure.
  */
 struct zpool *zpool_create_pool(char *type, char *name, gfp_t gfp,
-		struct zpool_ops *ops)
+                struct zpool_ops *ops)
 {
 	struct zpool_driver *driver;
 	struct zpool *zpool;

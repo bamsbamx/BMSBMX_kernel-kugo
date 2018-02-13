@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -9,14 +9,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+/*
+ * NOTE: This file has been modified by Sony Mobile Communications Inc.
+ * Modifications are Copyright (c) 2015 Sony Mobile Communications Inc,
+ * and licensed under the license of the file.
+ */
 
 #ifndef MSM_CAMERA_DT_UTIL_H__
 #define MSM_CAMERA_DT_UTIL_H__
 
 #include <soc/qcom/camera2.h>
 #include <linux/gpio.h>
+#include <linux/of_gpio.h>
 #include <linux/of.h>
 #include "msm_camera_i2c.h"
+#include "cam_soc_api.h"
+
 
 #define INVALID_VREG 100
 
@@ -37,9 +45,11 @@ int msm_camera_get_dt_gpio_req_tbl(struct device_node *of_node,
 	struct msm_camera_gpio_conf *gconf, uint16_t *gpio_array,
 	uint16_t gpio_array_size);
 
+#if defined(CONFIG_SONY_CAM_V4L2)
 int msm_camera_get_dt_gpio_set_tbl(struct device_node *of_node,
 	struct msm_camera_gpio_conf *gconf, uint16_t *gpio_array,
 	uint16_t gpio_array_size);
+#endif
 
 int msm_camera_init_gpio_pin_tbl(struct device_node *of_node,
 	struct msm_camera_gpio_conf *gconf, uint16_t *gpio_array,
@@ -60,4 +70,10 @@ int msm_camera_fill_vreg_params(struct camera_vreg_t *cam_vreg,
 	int num_vreg, struct msm_sensor_power_setting *power_setting,
 	uint16_t power_setting_size);
 
+int msm_camera_pinctrl_init
+	(struct msm_pinctrl_info *sensor_pctrl, struct device *dev);
+
+int32_t msm_sensor_driver_get_gpio_data(
+	struct msm_camera_gpio_conf **gpio_conf,
+	struct device_node *of_node);
 #endif

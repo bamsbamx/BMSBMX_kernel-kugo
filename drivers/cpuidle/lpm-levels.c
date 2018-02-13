@@ -12,6 +12,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Mobile Communications Inc.
+ * Modifications are Copyright (c) 2017 Sony Mobile Communications Inc,
+ * and licensed under the license of the file.
+ */
 
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -987,8 +992,6 @@ static int cluster_configure(struct lpm_cluster *cluster, int idx,
 	if (level->notify_rpm) {
 		struct cpumask nextcpu, *cpumask;
 		uint64_t us;
-		uint64_t sec;
-		uint64_t nsec;
 
 		us = get_cluster_sleep_time(cluster, &nextcpu,
 						from_idle, NULL);
@@ -1003,16 +1006,7 @@ static int cluster_configure(struct lpm_cluster *cluster, int idx,
 		clear_predict_history();
 		clear_cl_predict_history();
 
-		sec = us;
-		do_div(sec, USEC_PER_SEC);
-		nsec = us - sec * USEC_PER_SEC;
-
-		sec = sec * SCLK_HZ;
-		if (nsec > 0) {
-			nsec = nsec * NSEC_PER_USEC;
-			do_div(nsec, NSEC_PER_SEC/SCLK_HZ);
-		}
-		us = sec + nsec;
+		do_div(us, USEC_PER_SEC/SCLK_HZ);
 		msm_mpm_enter_sleep(us, from_idle, cpumask);
 	}
 

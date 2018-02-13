@@ -2073,6 +2073,9 @@ static int __init sony_sensor_init_module(void)
 			continue;
 		}
 		probe_count++;
+		if (probe_count < sensor_num) {
+			msleep(200);
+		}
 	}
 
 	if (!probe_count) {

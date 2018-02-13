@@ -491,7 +491,6 @@ static ssize_t spmi_dfs_reg_write(struct file *file, const char __user *buf,
 
 	mutex_lock(&trans->spmi_dfs_lock);
 
-	trans = file->private_data;
 	offset = trans->offset;
 
 	/* Make a copy of the user data */

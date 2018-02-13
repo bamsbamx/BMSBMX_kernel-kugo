@@ -86,6 +86,11 @@ Optional Properties:
 					power_restore (mmc_sdio_power_restore) while resuming.
 					This is in cases where card cannot go through
 					complete pwr_cycle in suspend/resume.
+	- qcom,sdr104-wa: On Certain chipsets, SDR104 mode might be unstable causing CRC errors
+			  on the interface. So there is a workaround implemented to skip printing
+			  register dumps on CRC errors and also downgrade bus speed mode to
+			  SDR50/DDR50 in case of continuous CRC errors. Set this flag to enable
+			  this workaround.
 
 In the following, <supply> can be vdd (flash core voltage) or vdd-io (I/O voltage).
 	- qcom,<supply>-always-on - specifies whether supply should be kept "on" always.
@@ -123,6 +128,9 @@ In the following, <supply> can be vdd (flash core voltage) or vdd-io (I/O voltag
 	  for following optional properties:
 		- pinctrl-names
 		- pinctrl-0, pinctrl-1,.. pinctrl-n
+
+	- qcom,large-address-bus - specifies whether the soc is capable of
+				 supporting larger than 32 bit address bus width.
 
         - qcom,cpu-affinity: this is a string that specifies the pm QoS request
 	  type. The supported cpu affinity modes are :
@@ -191,6 +199,7 @@ Example:
 		qcom,cpu-affinity-mask = <0x0f>;
 
 		qcom,nonremovable;
+		qcom,large-address-bus;
 		qcom,bus-speed-mode = "HS200_1p8v", "DDR_1p8v";
 		qcom,clk-rates = <400000 20000000 25000000 50000000 100000000 200000000>;
 		qcom,ice-clk-rates = <200000000>;

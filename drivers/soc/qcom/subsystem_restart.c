@@ -48,6 +48,8 @@
 
 #include <asm/current.h>
 
+#include "peripheral-loader.h"
+
 #define DISABLE_SSR 0x9889deed
 /* If set to 0x9889deed, call to subsystem_restart_dev() returns immediately */
 static uint disable_restart_work;
@@ -77,17 +79,20 @@ enum p_subsys_state {
 
 /**
  * enum subsys_state - state of a subsystem (public)
+ * @SUBSYS_OFFLINING: subsystem is offlining
  * @SUBSYS_OFFLINE: subsystem is offline
  * @SUBSYS_ONLINE: subsystem is online
  *
  * The 'public' side of the subsytem state, exposed to userspace.
  */
 enum subsys_state {
+	SUBSYS_OFFLINING,
 	SUBSYS_OFFLINE,
 	SUBSYS_ONLINE,
 };
 
 static const char * const subsys_states[] = {
+	[SUBSYS_OFFLINING] = "OFFLINING",
 	[SUBSYS_OFFLINE] = "OFFLINE",
 	[SUBSYS_ONLINE] = "ONLINE",
 };
@@ -357,10 +362,11 @@ static struct device_attribute subsys_attrs[] = {
 	__ATTR_NULL,
 };
 
-static struct bus_type subsys_bus_type = {
+struct bus_type subsys_bus_type = {
 	.name		= "msm_subsys",
 	.dev_attrs	= subsys_attrs,
 };
+EXPORT_SYMBOL(subsys_bus_type);
 
 static DEFINE_IDA(subsys_ida);
 
@@ -592,7 +598,8 @@ static int wait_for_err_ready(struct subsys_device *subsys)
 {
 	int ret;
 
-	if (!subsys->desc->err_ready_irq || enable_debug == 1)
+	if (!subsys->desc->err_ready_irq
+		|| enable_debug == 1 || is_timeout_disabled())
 		return 0;
 
 	ret = wait_for_completion_timeout(&subsys->err_ready,
@@ -734,6 +741,7 @@ static void subsys_stop(struct subsys_device *subsys)
 
 	if (!of_property_read_bool(subsys->desc->dev->of_node,
 					"qcom,pil-force-shutdown")) {
+		subsys_set_state(subsys, SUBSYS_OFFLINING);
 		subsys->desc->sysmon_shutdown_ret =
 				sysmon_send_shutdown(subsys->desc);
 		if (subsys->desc->sysmon_shutdown_ret)
