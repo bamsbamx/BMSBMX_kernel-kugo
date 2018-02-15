@@ -299,6 +299,11 @@ on post-fs
     #     /vendor/build.prop and
     #     /factory/factory.prop
     load_system_props
+
+    # Disable Sony RIC
+    mount securityfs securityfs /sys/kernel/security nosuid nodev noexec
+    write /sys/kernel/security/sony_ric/enable 0
+
     # start essential services
     start logd
     start servicemanager

@@ -359,6 +359,7 @@ service ssuiccd /system/bin/ssuiccd
 
 # Start RIC
 service ric /sbin/ric
+    disabled
     user root
     group root drmrpc trimarea system
     class main
