@@ -32,7 +32,7 @@ on init
     # Avoid long waits for rcu grace periods
     write /sys/kernel/rcu_expedited 1
 
-    write /proc/sys/vm/swappiness 100
+    write /proc/sys/vm/swappiness 0
 
     # Populate cpusets with correct cpus
     write /dev/cpuset/foreground/cpus 0-5
@@ -44,7 +44,7 @@ on init
     write /sys/devices/soc.0/7864900.sdhci/mmc_host/mmc1/clkgate_delay 1
 
     # Set the maximum number of streams for zRAM
-    write /sys/block/zram0/max_comp_streams 4
+    #write /sys/block/zram0/max_comp_streams 4
 
     # Enable panic on out of memory
     
